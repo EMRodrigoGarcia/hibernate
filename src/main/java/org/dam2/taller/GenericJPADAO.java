@@ -186,7 +186,12 @@ public class GenericJPADAO <T,K> implements DAOInterface <T,K>{
 	@Override
 	public Optional<T> findById(K key) {
 		// TODO Auto-generated method stub
-		return null;
+		EntityManager em = EntityManagerFactorySingleton.getInstance(persitenceUnitName).getEmf().createEntityManager();
+		
+		Optional<T> result = Optional.ofNullable(em.find(entityClass, key));
+		
+		em.close();
+		return result;
 	}
 	
 
