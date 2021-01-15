@@ -42,26 +42,23 @@ public class Main {
 		for(int i = 0; i < 2; i++) {
 			int idTallerBuscado = Teclado.leerInt("Id de taller");	
 			Optional<Taller> opTaller = tallerDAO.findById(Integer.valueOf(idTallerBuscado));
-			if (!opTaller.isEmpty()) {
-				Taller t = opTaller.get();
-				for(int j = 0; j < 2; j++) {
-					Coche c = Coche.builder()
-							.matricula(Teclado.leerString("Matricula"))
-							.marca(Teclado.leerString("Marca"))
-							.modelo(Teclado.leerString("Modelo"))
-							.color(Teclado.leerString("Color"))
-							.conductor(Conductor.builder()
-									.dni(Teclado.leerString("DNI conductor"))
-									.nombre(Teclado.leerString("Nombre conductor")).build())
-							.build();
-					
-					t.getCoches().add(c);
-					tallerDAO.update(t);
-				}
-			}else {
-				System.out.println("Taller no encontrado");
+			Taller t = opTaller.orElseGet(Taller::new);
+
+			for(int j = 0; j < 2; j++) {
+				Coche c = Coche.builder()
+						.matricula(Teclado.leerString("Matricula"))
+						.marca(Teclado.leerString("Marca"))
+						.modelo(Teclado.leerString("Modelo"))
+						.color(Teclado.leerString("Color"))
+						.conductor(Conductor.builder()
+								.dni(Teclado.leerString("DNI conductor"))
+								.nombre(Teclado.leerString("Nombre conductor")).build())
+						.build();
+				
+				t.getCoches().add(c);
 			}
-			
+			tallerDAO.update(t);
+
 		}
 		
 		
