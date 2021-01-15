@@ -19,6 +19,7 @@ public class App {
 		manager.getTransaction().commit();
 		System.out.println(manager.find(Alumno.class, Integer.valueOf(1)));
 		manager.close();
+	
 	}
 
 }
