@@ -22,20 +22,11 @@ public class Main {
 		//solicitar id de taller y añadir 2 coches
 		// repetir la misma operacion
 		
-		Taller t1 = Taller.builder()
-				.nombre("Taller1")
-				.aval(3000)
-				.build();
+		Taller t1 = Taller.builder().nombre("Taller1").aval(3000).build();
 		tallerDAO.save(t1);
-		Taller t2 = Taller.builder()
-				.nombre("Taller2")
-				.aval(4000)
-				.build();		
+		Taller t2 = Taller.builder().nombre("Taller2").aval(4000).build();		
 		tallerDAO.save(t2);
-		Taller t3 = Taller.builder()
-				.nombre("Taller3")
-				.aval(5000)
-				.build();
+		Taller t3 = Taller.builder().nombre("Taller3").aval(5000).build();
 		tallerDAO.save(t3);
 		tallerDAO.findAll().forEach(t -> System.out.println("Id: " + t.getId() + ", Nombre: " + t.getNombre()));
 		
