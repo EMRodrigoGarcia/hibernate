@@ -39,4 +39,9 @@ public class Taller implements Serializable{
 	@JoinColumn(name = "FK_ID_TALLER")
 	@Singular
 	private Set<Coche> coches;
+	@Override
+	public String toString() {
+		return "Taller [id=" + id + ", nombre=" + nombre + ", aval=" + aval + ", coches=" + coches + "]";
+	}
+	
 }
