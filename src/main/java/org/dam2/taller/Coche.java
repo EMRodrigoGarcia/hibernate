@@ -42,7 +42,7 @@ public class Coche implements Serializable{
 //	@JoinColumn(name = "FK_CONDUCTOR_DNI")
 	@Singular
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(joinColumns = {@JoinColumn(name="CONDUCTOR_DNI")}, inverseJoinColumns = {@JoinColumn(name = "COCHE_ID")})
+	@JoinTable(joinColumns = {@JoinColumn(name="COCHE_FK")}, inverseJoinColumns = {@JoinColumn(name = "CONDUCTOR_DNI")})
 	private Set<Conductor> conductores;
 
 	@Override

@@ -2,6 +2,7 @@ package org.dam2.taller;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
@@ -34,11 +35,11 @@ public class Conductor implements Serializable{
 	private String dni;
 	private String nombre;
 	@Singular
-	@ManyToMany(mappedBy = "conductores")
+	@ManyToMany(mappedBy = "conductores", fetch = FetchType.EAGER)
 	private Set<Coche> coches;
 	@Override
 	public String toString() {
-		return "Conductor [dni=" + dni + ", nombre=" + nombre + "]";
+		return "Conductor [dni=" + dni + ", nombre=" + nombre + ", coches=" + coches.stream().map(Coche::getMatricula).collect(Collectors.joining(", ")) +  "]";
 	}
 	
 	
