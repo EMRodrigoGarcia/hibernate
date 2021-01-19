@@ -60,8 +60,8 @@
 	<!-- Coge sólo las clases que aparecen -->
 	<!-- -<class>org.dam2.hibernate.Alumno</class> -->
 	<class>org.dam2.seguros.Seguro</class>
-	<class>org.dam2.seguros.Coberturas</class>
-	<class>org.dam2.seguros.Enfermedades</class>
+	<class>org.dam2.seguros.Cobertura</class>
+	<class>org.dam2.seguros.Enfermedad</class>
 	<class>org.dam2.seguros.AsistenciaMedica</class>
 	<exclude-unlisted-classes>true</exclude-unlisted-classes>
 
