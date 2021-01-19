@@ -3,6 +3,7 @@ package org.dam2.herencia;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@Entity
 @DiscriminatorValue(value = "AL")
 public class Alumno extends Persona {
 	@Column(length = 4)

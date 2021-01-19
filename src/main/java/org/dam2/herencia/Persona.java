@@ -20,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @ToString(callSuper = true)
 public class Persona {
 	@Id
