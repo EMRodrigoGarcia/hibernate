@@ -3,13 +3,18 @@ package hibernateDAO;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NamedQueries;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
@@ -30,6 +35,21 @@ public class GenericJPADAO <T,K> implements DAOInterface <T,K>{
 	public GenericJPADAO(Class<T> entityClass, String persitenceUnitName) {
 		this.entityClass = entityClass;
 		this.persitenceUnitName = persitenceUnitName;
+	}
+
+	@Override
+	public Optional<T> findById(K key) {
+		// TODO Auto-generated method stub
+		
+		EntityManagerFactory emFactory = EntityManagerFactorySingleton.getInstance(persitenceUnitName).getEmf();
+		
+		EntityManager em = emFactory.createEntityManager();
+		
+		Optional<T> result = Optional.ofNullable(em.find(entityClass, key));
+		
+		em.close();
+		
+		return result;
 	}
 
 	@Override
@@ -60,7 +80,7 @@ public class GenericJPADAO <T,K> implements DAOInterface <T,K>{
 		
 		EntityManager em = emFactory.createEntityManager();	
 		
-		
+
 		Object key = getKey (ov);
 		
 		if (key != null)
@@ -78,6 +98,7 @@ public class GenericJPADAO <T,K> implements DAOInterface <T,K>{
 			}
 			catch (Exception e)
 			{
+				System.out.println(e.toString());
 				ov = null;
 			}
 			
@@ -99,22 +120,34 @@ public class GenericJPADAO <T,K> implements DAOInterface <T,K>{
 		
 		EntityManager em = emFactory.createEntityManager();	
 		
-		try {
-			em.getTransaction().begin();
+		Object key = getKey (ov);
 		
-			em.persist(ov);
-			
-			em.getTransaction().commit();
-		
-		}
-		catch (Exception e)
+		if (key != null)
 		{
+			try {
+				em.getTransaction().begin();
+				
+				
+				if (em.find(entityClass, key) == null)
+					ov = em.merge(ov);
+				else
+					throw new EntityExistsException ();
+				
+				em.getTransaction().commit();
+			
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				ov = null;
+			}
+			
+			finally {
+				em.close();
+			}
+		}
+		else
 			ov = null;
-		}
-		
-		finally {
-			em.close();
-		}
 		
 		return ov;
 	
@@ -158,7 +191,7 @@ public class GenericJPADAO <T,K> implements DAOInterface <T,K>{
 		
 		// Comprobar si el atributo tiene una anotación Id
 		Predicate<Field> isKey = f -> Arrays.stream(f.getAnnotations()).
-										anyMatch(a ->a.annotationType().getSimpleName().equals("Id"));
+										anyMatch(a ->a.annotationType().getSimpleName().contains("Id"));
 		
 		// Obtener atributo clave
 		Optional<Field> field = Arrays.stream(entityClass.getDeclaredFields()).filter(isKey).findFirst();
@@ -167,32 +200,82 @@ public class GenericJPADAO <T,K> implements DAOInterface <T,K>{
 		{
 			// Crear método get de la clave
 			Field f = field.get();
+			
 			nameGet = "get" + f.getName().substring(0, 1).toUpperCase()+ f.getName().substring(1);
+
 			
 			// Obtener el valor de la clave
 			try {
 				valor = entityClass.getDeclaredMethod(nameGet, null).invoke(object, null);
+
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException e) {
 				// TODO Auto-generated catch block
+				
 				valor = null;
 			}
 		}		
 
-		
 		return valor;
+	}
+	
+	
+	public Stream executeQuery (String query, Object... params)
+	{
+
+		Stream result;
+		EntityManagerFactory emFactory = EntityManagerFactorySingleton.getInstance(persitenceUnitName).getEmf();
+		
+		EntityManager em = emFactory.createEntityManager();
+		
+		Query q = em.createQuery(query);
+		for (int i = 0; i < params.length; i++)
+			q.setParameter(i+1, params[i]);
+	
+		if (isUpdateQuery(query))
+		{
+			try {
+				em.getTransaction().begin();
+			
+				result = Stream.of(q.executeUpdate());
+				
+				em.getTransaction().commit();
+			
+			}
+			catch (Exception e)
+			{
+				result = Stream.empty();
+			}
+			
+		}
+		else
+			result = q.getResultStream();
+		
+		return result;
+	}
+
+	private boolean isUpdateQuery(String q) {
+		// TODO Auto-generated method stub
+		
+		
+		return !q.split(" ")[0].equalsIgnoreCase("select");
 	}
 
 	@Override
-	public Optional<T> findById(K key) {
+	public Stream executeQueryNamed(String nameQuery, Object... params) {
 		// TODO Auto-generated method stub
-		EntityManager em = EntityManagerFactorySingleton.getInstance(persitenceUnitName).getEmf().createEntityManager();
+		EntityManagerFactory emFactory = EntityManagerFactorySingleton.getInstance(persitenceUnitName).getEmf();
 		
-		Optional<T> result = Optional.ofNullable(em.find(entityClass, key));
+		EntityManager em = emFactory.createEntityManager();
+						
 		
-		em.close();
-		return result;
+		Query q = em.createNamedQuery(nameQuery);
+		
+		for (int i = 0; i < params.length; i++)
+			q.setParameter(i+1, params[i]);
+		
+		
+		return q.getResultStream();
 	}
 	
-
 }
