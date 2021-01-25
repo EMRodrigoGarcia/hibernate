@@ -36,18 +36,19 @@ public class Cliente {
 	private String nif;
 	private String nombre;
 	private int aval;
-	
-	//relacion 1-muchos
+
+	// relacion 1-muchos
 	@Singular
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "FK_CLIENTE")
 	private Set<Telefono> telefonos;
-	
-	//relacion muchos-muchos
+
+	// relacion muchos-muchos
 	@Singular
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "REL_CLIENTES_CUENTAS", joinColumns = {@JoinColumn(name = "FK_CLIENTE", nullable = false)},
-	        inverseJoinColumns = {@JoinColumn(name="FK_CUENTA", nullable = false)})
+	@JoinTable(name = "REL_CLIENTES_CUENTAS", joinColumns = {
+			@JoinColumn(name = "FK_CLIENTE", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "FK_CUENTA", nullable = false) })
 	private Set<Cuenta> cuentas;
 
 	@Override
@@ -55,6 +56,5 @@ public class Cliente {
 		return "Cliente [nif=" + nif + ", nombre=" + nombre + ", aval=" + aval + ", telefonos=" + telefonos
 				+ ", cuentas=" + cuentas.stream().map(Cuenta::getNumCuenta).collect(Collectors.toList()) + "]";
 	}
-	
-	
+
 }

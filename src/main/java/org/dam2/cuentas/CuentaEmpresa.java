@@ -23,19 +23,17 @@ public class CuentaEmpresa extends Cuenta {
 	private String nombreEmpresa;
 	private String cifEmpresa;
 	private boolean localPropioAlquilado;
-	@Override
-	public boolean retirar(int cantidad) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	
 	@Override
 	public boolean comprobarCantidadARetirar(int cantidad) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean transferir(int cantidad, Cuenta cuentaRecibidora) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean exito = false;
+		
+		int valorMaximoAvales = this.getClientes().stream().mapToInt(Cliente::getAval).sum();
+		
+		if (this.getSaldo() - cantidad <= valorMaximoAvales * 2) {
+			exito = true;
+		}
+		
+		return exito;
 	}
 }
