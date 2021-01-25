@@ -44,7 +44,7 @@ public abstract class Cuenta implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Cuenta [clientes=" + clientes.stream().map(Cliente::getNombre).collect(Collectors.toList())
+		return "Cuenta [clientes=" + clientes.stream().map(Cliente::getNif).collect(Collectors.toList())
 				+ ", numCuenta=" + numCuenta + ", saldo=" + saldo + "]";
 	}
 
