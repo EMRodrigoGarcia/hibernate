@@ -15,8 +15,8 @@ public class App {
 		GenericJPADAO<Cliente, String> clienteDAO = new GenericJPADAO<>(Cliente.class, "Cuentas");
 		GenericJPADAO<Cuenta, String> cuentaDAO = new GenericJPADAO<>(Cuenta.class, "Cuentas");
 		cargarDatos(clienteDAO);
-		clienteDAO.findAll().forEach(System.out::println);
-
+		//clienteDAO.findAll().forEach(System.out::println);
+/*
 		menuCuenta(cuentaDAO);
 		
 		//ingresar dinero
@@ -76,6 +76,41 @@ public class App {
 		
 		System.out.println(c);
 		System.out.println("Hora del sistema: " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm")));
+		*/
+		//aniadir un cliente ya existente a una cuenta ya existente
+		
+		addClienteExistente(cuentaDAO, clienteDAO);
+		cuentaDAO.findAll().forEach(System.out::println);
+	}
+
+	private static void addClienteExistente(GenericJPADAO<Cuenta, String> cuentaDAO,
+			GenericJPADAO<Cliente, String> clienteDAO) {
+
+		// buscar clientes
+		// seleccionar cliente
+		// buscar cuentas
+		// seleccionar cuenta
+		// add cliente a cuenta
+		String nif;
+		String nCuenta;
+		clienteDAO.findAll().forEach(cli -> System.out.println(cli.getNif()));
+		do {
+			nif = Teclado.leerString("Nif");
+		} while (clienteDAO.findById(nif).isEmpty());
+		
+		Cliente c = clienteDAO.findById(nif).get();
+		
+		cuentaDAO.findAll().forEach(cue -> System.out.println(cue.getNumCuenta()));
+		do {
+			nCuenta = Teclado.leerString("ncc");
+		} while (cuentaDAO.findById(nCuenta).isEmpty());
+		
+		Cuenta cu = cuentaDAO.findById(nCuenta).get();
+		
+		//cu.getClientes().add(c);
+		c.getCuentas().add(cu);
+		//cuentaDAO.update(cu);
+		clienteDAO.update(c);
 	}
 
 	public static void menuCuenta(GenericJPADAO<Cuenta, String> cuentaDAO) {
