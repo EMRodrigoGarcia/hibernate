@@ -39,6 +39,7 @@ public class Seguro implements Serializable{
 	@Column(length = 1)
 	private char sexo;
 	private boolean casado;
+	@Column(name = "num_hijos")
 	private Integer numHijos;
 	private boolean embarazada;
 	

@@ -1,5 +1,6 @@
 package org.dam2.cuentas;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,7 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "clientes")
-public class Cliente {
+public class Cliente implements Serializable {
 	@Id
 	@EqualsAndHashCode.Include
 	private String nif;

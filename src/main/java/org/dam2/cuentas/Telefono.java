@@ -1,5 +1,7 @@
 package org.dam2.cuentas;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "telefonos")
-public class Telefono {
+public class Telefono implements Serializable {
 	@Id
 	@EqualsAndHashCode.Include
 	private String numero;

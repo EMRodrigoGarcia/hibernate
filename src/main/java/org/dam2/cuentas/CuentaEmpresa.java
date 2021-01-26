@@ -1,5 +1,7 @@
 package org.dam2.cuentas;
 
+import java.io.Serializable;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -19,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @DiscriminatorValue(value = "EM")
-public class CuentaEmpresa extends Cuenta {
+public class CuentaEmpresa extends Cuenta implements Serializable {
 	private String nombreEmpresa;
 	private String cifEmpresa;
 	private boolean localPropioAlquilado;

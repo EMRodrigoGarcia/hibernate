@@ -1,5 +1,7 @@
 package org.dam2.cuentas;
 
+import java.io.Serializable;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -18,7 +20,7 @@ import lombok.experimental.SuperBuilder;
 @ToString(callSuper = true)
 @Entity
 @DiscriminatorValue(value = "PA")
-public class CuentaParticular extends Cuenta {
+public class CuentaParticular extends Cuenta implements Serializable {
 	private boolean emitidaTarjeta;
 
 	@Override
